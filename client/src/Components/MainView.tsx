@@ -1,14 +1,19 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import MonthView from './MonthView'
 import Today from './TodayView'
 import FloatingBtn from './FloatingBtn'
 import AddTaskView from './AddTaskView'
-import { AddTaskContext } from '../providers/FloatingWindows'
+import { AddTaskContext, TasksContext } from '../providers/FloatingWindows'
+
 const MainView = () => {
   const taskView = useContext(AddTaskContext)
+  const tasksData = useContext(TasksContext)
+
+  useEffect(()=>{
+    tasksData?.getTasksData()
+  },[])
   return (
     <>
-
     {taskView?.addTaskVisible &&
     <div className=' flex   flex-col lg:flex-row not-lg:space-y-3 fixed w-screen lg:h-[calc(100vh-50px)] justify-center lg:items-center lg:bg-[rgba(0,0,0,0.41)]'>
       <AddTaskView/>
@@ -19,7 +24,6 @@ const MainView = () => {
         <FloatingBtn />
     </div>
     </>
-    
   )
 }
 

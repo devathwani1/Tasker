@@ -1,10 +1,12 @@
 const Express = require('express')
+const CORS = require('cors')
 const {PrismaClient} = require('@prisma/client')
 const app = Express()
 const ps = new PrismaClient();
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
+app.use(CORS())
 app.use(Express.json())
 app.get('/',(req,res) => {
     res.send("Hi! this is the server here")
@@ -80,6 +82,8 @@ app.post('/task',authenticateToken,async (req,res) => {
                 pendingOn : data.pendingOn
             }
         })
+
+        
 
         res.status(200).json({message : `Successfully crated task id : ${task.id} for ${task.pendingOn.toISOString()}`})
     }

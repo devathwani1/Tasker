@@ -1,7 +1,20 @@
 export type dateObj = {
     'date' : number,
+    'full_date' : string,
     'week_num' : number,
     'week_day' : string
+}
+
+type taskData = {
+    'userId' : number,
+    'title' : string,
+    'content' : string,
+    'pendingOn' : string,
+    'createdAt' : string,
+}
+
+export type dateWithDataObj = dateObj & {
+    tasks : taskData[]
 }
 
 type dateType = (year:number,month:number) => dateObj[]
@@ -23,11 +36,12 @@ export const daysInMonths : dateType = (year : number,month : number) => {
     const dates = []
 
     for(var i = 1;i <= dayCount;i++){
-        const day = new Date(year,month,i).getDay()
+        const day = new Date(year,month,i)
         dates.push({
             'date' : i,
-            'week_num' : day,
-            'week_day' : weeks[day]
+            'full_date' : day.toISOString(),
+            'week_num' : day.getDay(),
+            'week_day' : weeks[day.getDay()]
         })
     }
 

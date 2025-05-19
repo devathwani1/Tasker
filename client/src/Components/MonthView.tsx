@@ -1,8 +1,9 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import MonthCard from './MonthCard'
 import {SizeContext} from '../providers/ScreenSize'
 import {daysInMonths,type dateObj} from '../utilities/cal'
 import { IoIosArrowBack,IoIosArrowForward } from "react-icons/io";
+import { TasksContext } from '../providers/FloatingWindows';
 const MonthView = () => {
     const CURRENT_WEEK_MULTIPLY = 7
     const NUMBER_OF_MONTHS = 12
@@ -17,7 +18,7 @@ const MonthView = () => {
     const elementEnd = mSize.isMediumDevice ? elementStart+CURRENT_WEEK_MULTIPLY : dayList.length
     const placeHolderICalc = FULL_CALENDER_ELEMENTS - dayList.length - (dayList[0] ? dayList[0].week_num : 0)
     const placeHolderI = placeHolderICalc < 7 ? placeHolderICalc : Math.floor( placeHolderICalc - 7)
-    
+    const tasksDataContext = useContext(TasksContext)
 
     useEffect(() => {
       setDayList(daysInMonths(2025,month))
@@ -30,11 +31,30 @@ const MonthView = () => {
       handleResize()
       window.addEventListener('resize',handleResize)
       
+      console.log(tasksData)
+
       return () => window.removeEventListener('resize',handleResize)
-
-      
-
     },[mSize])
+
+    const tasksData = useMemo(()=>{
+
+      return dayList.map((day) => {
+        const data = {
+          ...day,
+          'tasks' : Array()
+        }
+
+        tasksDataContext?.tasksData.forEach((tasks)=>{
+          if(tasks.pendingOn.split('T')[0] == data.full_date.split('T')[0]){
+            console.log(`Pushed this ${tasks} on date ${tasks.pendingOn}`)
+            data.tasks.push(tasks)
+          }
+        })
+
+        return data
+        
+      })
+    },[dayList,tasksDataContext])
   return (
     <div className='h-[calc(100vh-70px)] bg-blue-900  rounded-4xl w-[100%] lg:w-[68%] overflow-y-hidden lg:overflow-y-hidden hide-scrollbar'>
         <div className='max-h-14 bg-black rounded-t-4xl text-3xl font-bold text-white p-5 flex justify-between items-center'>
@@ -104,7 +124,7 @@ const MonthView = () => {
     }
 
     {
-      dayList.slice(elementStart, elementEnd).map((ele, idx) => (
+      tasksData.slice(elementStart, elementEnd).map((ele, idx) => (
         <MonthCard key={idx} data={ele} />
       ))
     }
