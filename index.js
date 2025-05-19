@@ -79,7 +79,8 @@ app.post('/task',authenticateToken,async (req,res) => {
                 userId : req.user.userId,
                 title : data.title,
                 content : data.content,
-                pendingOn : data.pendingOn
+                pendingOn : data.pendingOn,
+                weekDays : data.weekDays
             }
         })
 

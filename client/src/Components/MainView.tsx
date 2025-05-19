@@ -18,11 +18,11 @@ const MainView = () => {
     <div className=' flex   flex-col lg:flex-row not-lg:space-y-3 fixed w-screen lg:h-[calc(100vh-50px)] justify-center lg:items-center lg:bg-[rgba(0,0,0,0.41)]'>
       <AddTaskView/>
     </div>}
-    <div className=' flex justify-around  flex-col lg:flex-row not-lg:space-y-3 m-3'>
+    <div className={`flex justify-around  flex-col lg:flex-row not-lg:space-y-3 m-3 ${taskView?.addTaskVisible && 'not-lg:hidden'}`}>
         <MonthView/>
-        <Today/>
-        <FloatingBtn />
+        <Today/>   
     </div>
+    <FloatingBtn />
     </>
   )
 }

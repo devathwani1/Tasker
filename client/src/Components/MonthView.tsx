@@ -23,10 +23,11 @@ const MonthView = () => {
     const placeHolderICalc = FULL_CALENDER_ELEMENTS - dayList.length - (dayList[0] ? dayList[0].week_num : 0)
     const placeHolderI = placeHolderICalc < 7 ? placeHolderICalc : Math.floor( placeHolderICalc - 7)
     const tasksDataContext = useContext(TasksContext)
+    const TODAY = new Date()
 
     useEffect(()=>{
-      setMonth(new Date().getMonth())
-      console.log(month)
+      setMonth(TODAY.getMonth())
+      setCurrentWeek(Math.floor(TODAY.getDate()/7))
     },[])
 
     useEffect(() => {
@@ -45,6 +46,7 @@ const MonthView = () => {
 
     const tasksData = useMemo(()=>{
 
+
       return dayList.map((day) => {
         const data = {
           ...day,
@@ -56,6 +58,7 @@ const MonthView = () => {
             data.tasks.push(tasks)
           }
         })
+        
         return data
 
         

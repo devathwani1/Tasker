@@ -33,6 +33,8 @@ model Task{
   content String
   createdAt DateTime @default(now())
   pendingOn DateTime 
+  repeat Boolean @default(false)
+  weekDays String[]
   state States @default(PENDING)
 
   userId Int

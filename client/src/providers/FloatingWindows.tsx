@@ -10,6 +10,7 @@ type TaskData = {
     content : string,
     date : string,
     time : string,
+    weekDays : string[]
 }
 
 type createTaskType = {
@@ -22,7 +23,8 @@ type TaskType = {
     userId : number,
     title : string,
     content : string,
-    pendingOn : string
+    pendingOn : string,
+    weekDays : string[]
 }
 
 type TaskDataType = {
@@ -40,7 +42,8 @@ export const AddTaskProvider : React.FC<{'children' : ReactNode}> = ({children})
         title : "",
         content : "",
         date : "",
-        time : ""
+        time : "",
+        weekDays : []
     })
     const [tasksData,setTasksData] = useState<TaskType[]>([])
 
@@ -61,7 +64,6 @@ export const AddTaskProvider : React.FC<{'children' : ReactNode}> = ({children})
             })
             const data = await response.json()
             setTasksData(data)
-            
         }
         catch(e){
             console.log(String(e))
@@ -81,6 +83,7 @@ export const AddTaskProvider : React.FC<{'children' : ReactNode}> = ({children})
         return
         }
 
+
         try{
             const response = await fetch('http://localhost:3000/task',{
                 method : "POST",
@@ -94,7 +97,6 @@ export const AddTaskProvider : React.FC<{'children' : ReactNode}> = ({children})
                 })
             })
             const data = await response.json()
-            console.log(data)
         }
         catch(e){
             console.error(String(e))
