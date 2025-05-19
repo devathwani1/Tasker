@@ -8,9 +8,13 @@ const MonthView = () => {
     const CURRENT_WEEK_MULTIPLY = 7
     const NUMBER_OF_MONTHS = 12
     const FULL_CALENDER_ELEMENTS = 42
+    const CURRENT_YEAR = new Date().getFullYear()
+    const YEARS = Array.from({length : 10},(_,i)=> CURRENT_YEAR + i)
     const MONTHS = ['January','February','March','April','May','June','July','Agust','September','October','November','December']
     const mSize = useContext(SizeContext)
     const [currentWeek,setCurrentWeek] = useState<number>(0)
+    const [currentYear,setCurrentYear] = useState<number>(new Date().getFullYear())
+    
     const [month,setMonth] = useState<number>(0)
     if(mSize == undefined) throw new Error("useSizeContext must be used withint a size provider")
     const [dayList,setDayList] = useState<dateObj[]>([])
@@ -20,9 +24,14 @@ const MonthView = () => {
     const placeHolderI = placeHolderICalc < 7 ? placeHolderICalc : Math.floor( placeHolderICalc - 7)
     const tasksDataContext = useContext(TasksContext)
 
+    useEffect(()=>{
+      setMonth(new Date().getMonth())
+      console.log(month)
+    },[])
+
     useEffect(() => {
-      setDayList(daysInMonths(2025,month))
-    },[month])
+      setDayList(daysInMonths(currentYear,month))
+    },[month,currentYear])
 
     useEffect(() => {
       const handleResize = () => {
@@ -30,8 +39,6 @@ const MonthView = () => {
       }
       handleResize()
       window.addEventListener('resize',handleResize)
-      
-      console.log(tasksData)
 
       return () => window.removeEventListener('resize',handleResize)
     },[mSize])
@@ -45,13 +52,13 @@ const MonthView = () => {
         }
 
         tasksDataContext?.tasksData.forEach((tasks)=>{
-          if(tasks.pendingOn.split('T')[0] == data.full_date.split('T')[0]){
-            console.log(`Pushed this ${tasks} on date ${tasks.pendingOn}`)
+          if(tasks.pendingOn.split('T')[0] == data.full_date){
             data.tasks.push(tasks)
           }
         })
-
         return data
+
+        
         
       })
     },[dayList,tasksDataContext])
@@ -59,23 +66,32 @@ const MonthView = () => {
     <div className='h-[calc(100vh-70px)] bg-blue-900  rounded-4xl w-[100%] lg:w-[68%] overflow-y-hidden lg:overflow-y-hidden hide-scrollbar'>
         <div className='max-h-14 bg-black rounded-t-4xl text-3xl font-bold text-white p-5 flex justify-between items-center'>
 
-            {
-              !mSize.isMediumDevice ? (
-              <span>{MONTHS[month]}</span>
-              ) : (
-                <select className = 'bg-black' onChange={(e) => {
-                  setMonth(parseInt(e.target.value))
-                  setCurrentWeek(0)
-                }}>
-                  {
-                    MONTHS.map((ele,idx) => (
-                      <option className='text-2xl' value={`${idx}`}>{ele}</option>
-                    ))
-                  }
-                 
-                </select>
-              )
-            }
+            <div className='w-[80%] lg:w-[20%] lg:flex justify-between'>
+              {
+                !mSize.isMediumDevice ? (
+                <span>{MONTHS[month]}</span>
+                ) : (
+                  <select value={month} className = 'bg-black' onChange={(e) => {
+                    setMonth(parseInt(e.target.value))
+                    setCurrentWeek(0)
+                  }}>
+                    {
+                      MONTHS.map((ele,idx) => (
+                        <option className='text-2xl' value={`${idx}`}>{ele}</option>
+                      ))
+                    }
+              
+                  </select>
+                )
+              }
+              <select onChange={(e) => setCurrentYear(parseInt(e.target.value))}  className = 'bg-black' value={currentYear}>
+                {
+                  YEARS.map((year)=>(
+                    <option value={year}>{year}</option>
+                  ))
+                }
+              </select>
+            </div>
 
             <div className='flex justify-center items-center'>
               <i className={`${currentWeek == 0 ? 'not-lg:text-gray-300' : 'text-white'} ${month == 0 ? 'text-gray-300' : ''}`} onClick={()=>{

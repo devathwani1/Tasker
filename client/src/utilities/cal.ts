@@ -38,8 +38,8 @@ export const daysInMonths : dateType = (year : number,month : number) => {
     for(var i = 1;i <= dayCount;i++){
         const day = new Date(year,month,i)
         dates.push({
-            'date' : i,
-            'full_date' : day.toISOString(),
+            'date' : day.getDate(),
+            'full_date' : day.toLocaleDateString('en-CA'),
             'week_num' : day.getDay(),
             'week_day' : weeks[day.getDay()]
         })

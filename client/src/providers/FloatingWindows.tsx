@@ -104,6 +104,8 @@ export const AddTaskProvider : React.FC<{'children' : ReactNode}> = ({children})
         taskData.content = ""
         taskData.date = ""
         taskData.time = ""
+
+        getTasksData()
     }
 
     return (
