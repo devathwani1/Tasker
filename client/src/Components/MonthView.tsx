@@ -8,6 +8,7 @@ const MonthView = () => {
     const CURRENT_WEEK_MULTIPLY = 7
     const NUMBER_OF_MONTHS = 12
     const FULL_CALENDER_ELEMENTS = 42
+    const WEEKDAYS = ['S','M','T','W','Th','F','St']
     const CURRENT_YEAR = new Date().getFullYear()
     const YEARS = Array.from({length : 10},(_,i)=> CURRENT_YEAR + i)
     const MONTHS = ['January','February','March','April','May','June','July','Agust','September','October','November','December']
@@ -45,8 +46,6 @@ const MonthView = () => {
     },[mSize])
 
     const tasksData = useMemo(()=>{
-
-
       return dayList.map((day) => {
         const data = {
           ...day,
@@ -57,12 +56,15 @@ const MonthView = () => {
           if(tasks.pendingOn.split('T')[0] == data.full_date){
             data.tasks.push(tasks)
           }
+          else if(tasks.weekDays.length > 0){
+            const task_week_num = tasks.weekDays.map((day)=> (WEEKDAYS.indexOf(day)))
+            if(task_week_num.includes(data.week_num)){
+              data.tasks.push(tasks)
+            }
+          }
         })
-        
         return data
 
-        
-        
       })
     },[dayList,tasksDataContext])
   return (
