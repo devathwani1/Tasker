@@ -3,15 +3,21 @@ import MonthView from './MonthView'
 import Today from './TodayView'
 import FloatingBtn from './FloatingBtn'
 import AddTaskView from './AddTaskView'
-import { AddTaskContext, TasksContext } from '../providers/FloatingWindows'
+import { AddTaskContext, DataContext,  } from '../providers/Contexts'
+import LoadingView from './LoadingView'
+import TaskMenu from './TaskMenu'
+import { useSearchParams } from 'react-router-dom'
 
 const MainView = () => {
   const taskView = useContext(AddTaskContext)
-  const tasksData = useContext(TasksContext)
+  const dataContext = useContext(DataContext)
+
 
   useEffect(()=>{
-    tasksData?.getTasksData()
-  },[])
+    dataContext?.fetchAndProcessData()
+  })
+
+  if(!dataContext?.isSuccessfull) return <LoadingView/>
   return (
     <>
     {taskView?.addTaskVisible &&
@@ -23,6 +29,7 @@ const MainView = () => {
         <Today/>   
     </div>
     <FloatingBtn />
+    <TaskMenu/>
     </>
   )
 }

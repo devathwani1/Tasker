@@ -1,9 +1,6 @@
-export type dateObj = {
-    'date' : number,
-    'full_date' : string,
-    'week_num' : number,
-    'week_day' : string
-}
+import {type DateType} from '../providers/Types'
+
+
 
 type taskData = {
     'userId' : number,
@@ -11,13 +8,15 @@ type taskData = {
     'content' : string,
     'pendingOn' : string,
     'createdAt' : string,
+    'weekDays' : [],
+    'state' : string
 }
 
-export type dateWithDataObj = dateObj & {
+export type dateWithDataObj = DateType & {
     tasks : taskData[]
 }
 
-type dateType = (year:number,month:number) => dateObj[]
+type dateType = (year:number,month:number) => DateType[]
 
 
 export const daysInMonths : dateType = (year : number,month : number) => {

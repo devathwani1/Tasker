@@ -1,6 +1,6 @@
 import { FaPlus ,FaCheck} from "react-icons/fa6";
 import React, { useContext, type Dispatch } from 'react'
-import { AddTaskContext, CreateTaskContext } from "../providers/FloatingWindows";
+import { AddTaskContext, CreateTaskContext } from "../providers/Contexts";
 
 const FloatingBtn = () => {
   const addTask = useContext(AddTaskContext)
