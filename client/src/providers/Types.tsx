@@ -1,9 +1,17 @@
 import type { Dispatch } from "react"
 
+
+
 //To turn of and on the add task floating page
 export type AddTaskContextType = {
     addTaskVisible : boolean,
     setAddTaskVisible : Dispatch<React.SetStateAction<boolean>>
+}
+
+//To turn of and on the update task floating page
+export type UpdateTaskContextType = {
+    updateTaskVisible : boolean,
+    setUpdateTaskVisible : Dispatch<React.SetStateAction<boolean>>
 }
 
 //Task Createe Type and creatTask CreateTaskContext Type to create a new task
@@ -15,11 +23,20 @@ export type TaskCreateType = {
     time : string,
     weekDays : string[]
 }
+export type TaskUpdateType = TaskCreateType & {
+    id : number
+}
 
 export type CreateTaskContextType = {
     taskData : TaskCreateType,
     setTaskData : Dispatch<React.SetStateAction<TaskCreateType>>,
     submitTask : () => void;
+}
+
+export type PutTaskContextType = {
+    putTaskData : TaskUpdateType,
+    setPutTaskData : Dispatch<React.SetStateAction<TaskUpdateType>>,
+    updateTask : () => void;
 }
 
 //Main TaskType for fetching the ddata na ditnex context type

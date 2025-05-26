@@ -13,7 +13,7 @@ const MonthCard = ({data} : {data : DateAndTaskType}) => {
   return (
     <div onClick={()=>{
          SingleContext?.setData(data)
-    }} className={`rounded-2xl border-2 ${is_today ? 'bg-white text-black' : 'text-white'} border-white  lg:w-[13.00%] w-[100%] not-lg:px-1.5 p-1 overflow-y-hidden flex lg:flex-col not-lg:space-x-6 lg:h-[16%]`}>
+    }} className={`rounded-2xl ${SingleContext?.data.full_date == data.full_date ? 'border-3' : 'border-2'} ${is_today ? 'bg-white text-black' : 'text-white'} border-white  lg:w-[13.00%] w-[100%] not-lg:px-1.5 p-1 overflow-y-hidden flex lg:flex-col not-lg:space-x-6 lg:h-[16%]`}>
         <div className='mb-1 not-lg:flex not-lg:flex-col not-lg:justify-between not-lg:items-center'>
             <p className=' text-[1.5rem] lg:text-[1rem]  font-medium'>{data.date}</p>
             <span className={`${data.week_num == 0 ? 'text-red-400' : ''} lg:hidden font-medium`}>{WEEK_DAYS[data.week_num]}</span>

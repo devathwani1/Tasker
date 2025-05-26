@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import TopBar from './Components/TopBar'
 import Today from './Components/TodayView'
 import MonthView from './Components/MonthView'

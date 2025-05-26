@@ -14,10 +14,10 @@ const TodayView = () => {
         <div className='max-h-14 position- bg-black rounded-t-4xl text-white font-bold text-2xl flex justify-between items-center p-5'>
             <span>{processData?.data.full_date}</span>
         </div>
-        <div className='rounded-b-4xl p-5 space-y-5 overflow-y-scroll hide-scrollbar max-h-[45rem]'>
+        <div className='rounded-b-4xl p-5 space-y-5 overflow-y-scroll hide-scrollbar max-h-[45rem] h-full'>
           
           { 
-          (!processData?.data.tasks) ? (
+          (processData?.data.tasks[0]) ? (
 
           
             processData?.data.tasks.map((task)=>(

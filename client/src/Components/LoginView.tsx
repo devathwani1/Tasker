@@ -5,6 +5,7 @@ type LoginDataType = {
   'password' : string
 }
 const LoginView = () => {
+  
   const [userData,setUserData] = useState<LoginDataType>({
     'name' : '',
     'password' : ''

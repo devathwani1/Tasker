@@ -1,10 +1,13 @@
 import { createContext, useContext, useState, type Dispatch, type ReactNode } from "react";
-import {type AddTaskContextType, type CreateTaskContextType, type DateAndTaskType, type SingleDateAndTaskContext, type TaskCreateType, type TasksDataContextType, type TaskType, type DateAndTasksContextType, type DateType, type DateContextType, type eDate} from './Types'
+import {type AddTaskContextType, type CreateTaskContextType, type DateAndTaskType, type SingleDateAndTaskContext, type TaskCreateType, type TasksDataContextType, type TaskType, type DateAndTasksContextType, type DateType, type DateContextType, type eDate, type UpdateTaskContextType, type PutTaskContextType, type TaskUpdateType} from './Types'
 import {daysInMonths} from '../utilities/cal'
 import { TODAY, WEEK_DAYS } from "./Constants";
 
 export const AddTaskContext = createContext<AddTaskContextType | undefined>(undefined)
+export const UpdateTaskContext = 
+createContext<UpdateTaskContextType | undefined>(undefined)
 export const CreateTaskContext = createContext<CreateTaskContextType | undefined>(undefined)
+export const PutTaskContext = createContext<PutTaskContextType | undefined>(undefined)
 export const DataContext = createContext<DateAndTasksContextType | undefined>(undefined)
 export const SingleDataContext  = createContext<SingleDateAndTaskContext | undefined>(undefined)
 export const DateContext = createContext<DateContextType | undefined>(undefined)
@@ -16,6 +19,7 @@ export const AddTaskProvider : React.FC<{'children' : ReactNode}> = ({children})
         year : TODAY.getFullYear()
     })
     const [addTaskVisible,setAddTaskVisible]  = useState<boolean>(false)
+    const [updateTaskVisible,setUpdateTaskVisible]  = useState<boolean>(false)
     const [taskData,setTaskData] = useState<TaskCreateType>({
         title : "",
         content : "",
@@ -23,6 +27,15 @@ export const AddTaskProvider : React.FC<{'children' : ReactNode}> = ({children})
         time : "",
         state : "PENDING",
         weekDays : []
+    })
+    const [putTaskData,setPutTaskData] = useState<TaskUpdateType>({
+        id : 0,
+       title : "",
+       content : "",
+       state : "PENDING",
+       date : "",
+       time : "",
+       weekDays : []
     })
     const [dateAndTasks,setDateAndTasks] = useState<DateAndTaskType[]>([])
     const [isSuccessfull,setIsSuccessfull] = useState(false) //if data is fetched and successfully processed
@@ -33,6 +46,70 @@ export const AddTaskProvider : React.FC<{'children' : ReactNode}> = ({children})
         week_day : "",
         tasks : []
     })
+
+    const updateTask = async () => {
+        const {title,content,date,time,id,state,weekDays} = putTaskData
+        if (id === 0) {
+        alert("No task selected to update.")
+        return
+        }
+        if (
+            title === "" &&
+            content === "" &&
+            date === "" &&
+            time === "" &&
+            state === "PENDING" &&
+             weekDays.length === 0
+            ) {
+            alert("Nothing to update in the task!")
+            return
+            }
+
+
+        const token = localStorage.getItem('jwt_token')
+
+        const data : Record<string,number | string | any[]> = {}
+        data['id'] = id
+        if(title != "") data['title'] = title
+        if(content != "") data['content'] = content
+        if(date != "" && time != "") data['pendingOn'] = `${date}T${time}:00Z`
+        if(weekDays.length != 0) data['weekDays'] = weekDays
+        
+
+
+
+        if(!token){ alert("Can't submit, JWT missing!")
+        return
+        }
+        try{
+            const response = await fetch(`http://localhost:3000/task/${id}`,{
+                method : "PUT",
+                headers : {
+                    'Content-Type' : 'application/json',
+                    'Authorization' : `Bearer ${token}`
+                },
+                body : JSON.stringify(data)
+            })
+            if(!response.ok) throw new Error("Response is not ok while subbmiting a new task")
+            console.log(data)
+        }
+        catch(e){
+            console.error(String(e))
+        }
+
+        setPutTaskData({
+    id : 0,
+    title: "",
+    content: "",
+    date: "",
+    time: "",
+    state: "PENDING",
+    weekDays: [],
+})
+
+
+        fetchAndProcessData()
+    }
 
     const fetchAndProcessData = async () => {
         console.log("Triggering fetchand process data...")
@@ -119,7 +196,7 @@ export const AddTaskProvider : React.FC<{'children' : ReactNode}> = ({children})
                     'pendingOn' : `${taskData.date}T${taskData.time}:00Z`
                 })
             })
-            if(!response.ok) return new Error("Response is not ok while subbmiting a new task")
+            if(!response.ok) throw new Error("Response is not ok while subbmiting a new task")
         }
         catch(e){
             console.error(String(e))
@@ -142,7 +219,9 @@ export const AddTaskProvider : React.FC<{'children' : ReactNode}> = ({children})
 
     return (
         <AddTaskContext.Provider value={{addTaskVisible,setAddTaskVisible}}>
+        <UpdateTaskContext.Provider value={{updateTaskVisible,setUpdateTaskVisible}}>
             <CreateTaskContext.Provider value={{taskData,setTaskData,submitTask}}>
+                <PutTaskContext.Provider value={{putTaskData,setPutTaskData,updateTask}}>
                 <DataContext.Provider value={{dateAndTasks,fetchAndProcessData,isSuccessfull}}>
                     <SingleDataContext.Provider value={{data,setData}}>
                         <DateContext.Provider value={{date,setDate}}>
@@ -150,7 +229,9 @@ export const AddTaskProvider : React.FC<{'children' : ReactNode}> = ({children})
                         </DateContext.Provider>
                     </SingleDataContext.Provider>
                 </DataContext.Provider>
+                </PutTaskContext.Provider>
             </CreateTaskContext.Provider>
+            </UpdateTaskContext.Provider>
         </AddTaskContext.Provider>
     )
 }
