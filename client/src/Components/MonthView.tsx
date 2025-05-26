@@ -28,7 +28,7 @@ const MonthView = () => {
     },[])
 
     useEffect(()=>{
-      dataContext?.fetchAndProcessData()
+      // dataContext?.fetchAndProcessData()
       if(!(singleContext?.data.full_date == "")) return
       const dataToday = dataContext.dateAndTasks.find(prev => (prev.full_date == TODAY.toLocaleDateString('en-CA'))) 
       if(dataToday) 

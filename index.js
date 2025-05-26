@@ -116,6 +116,11 @@ app.get('/tasks',authenticateToken,async (req,res) => {
 app.delete('/task/:id',authenticateToken,async (req,res)=>{
     const task_id = req.params.id
     try{
+        if(ps.task.findFirst({
+            where:{
+                userId : req.user.userId
+            }
+        }))
         await ps.task.delete({
             where:{
                 userId : req.user.userId,
@@ -170,7 +175,8 @@ app.put('/task/:id',authenticateToken,async(req,res)=>{
             data : {
                 title : data.title,
                 content : data.content,
-                pendingOn : data.pendingOn
+                pendingOn : data.pendingOn,
+                weekDays : data.weekDays
             }
         })
         return res.status(200).json({

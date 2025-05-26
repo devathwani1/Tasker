@@ -35,6 +35,7 @@ export const AddTaskProvider : React.FC<{'children' : ReactNode}> = ({children})
     })
 
     const fetchAndProcessData = async () => {
+        console.log("Triggering fetchand process data...")
         const token = localStorage.getItem('jwt_token')
         var tasks : TaskType[] = []
         const processedData  : DateAndTaskType[] = []
@@ -81,6 +82,13 @@ export const AddTaskProvider : React.FC<{'children' : ReactNode}> = ({children})
             if(!processedData) throw new Error("Process data is empty!")
             setDateAndTasks(processedData)
             setIsSuccessfull(true)
+
+            if (data.full_date) {
+            const updatedData = processedData.find(d => d.full_date === data.full_date)
+            if (updatedData) {
+                setData({ ...updatedData })     
+            }
+            }
         }
         catch(e){
             console.log(String(e))
@@ -117,10 +125,15 @@ export const AddTaskProvider : React.FC<{'children' : ReactNode}> = ({children})
             console.error(String(e))
         }
 
-        taskData.title = ""
-        taskData.content = ""
-        taskData.date = ""
-        taskData.time = ""
+        setTaskData({
+    title: "",
+    content: "",
+    date: "",
+    time: "",
+    state: "PENDING",
+    weekDays: [],
+})
+
 
         fetchAndProcessData()
     }

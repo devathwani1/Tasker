@@ -5,8 +5,6 @@ import FloatingBtn from './FloatingBtn'
 import AddTaskView from './AddTaskView'
 import { AddTaskContext, DataContext,  } from '../providers/Contexts'
 import LoadingView from './LoadingView'
-import TaskMenu from './TaskMenu'
-import { useSearchParams } from 'react-router-dom'
 
 const MainView = () => {
   const taskView = useContext(AddTaskContext)
@@ -15,7 +13,7 @@ const MainView = () => {
 
   useEffect(()=>{
     dataContext?.fetchAndProcessData()
-  })
+  },[])
 
   if(!dataContext?.isSuccessfull) return <LoadingView/>
   return (
@@ -28,9 +26,8 @@ const MainView = () => {
         <MonthView/>
         <Today/>   
     </div>
-    <FloatingBtn />
-    <TaskMenu/>
-    </>
+    <FloatingBtn />   
+     </>
   )
 }
 

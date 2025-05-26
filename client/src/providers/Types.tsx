@@ -25,6 +25,7 @@ export type CreateTaskContextType = {
 //Main TaskType for fetching the ddata na ditnex context type
 export type TaskType = {
     userId : number,
+    id : number,
     title : string,
     content : string,
     state : string,
