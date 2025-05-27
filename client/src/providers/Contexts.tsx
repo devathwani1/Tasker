@@ -1,8 +1,9 @@
-import { createContext, useContext, useState, type Dispatch, type ReactNode } from "react";
-import {type AddTaskContextType, type CreateTaskContextType, type DateAndTaskType, type SingleDateAndTaskContext, type TaskCreateType, type TasksDataContextType, type TaskType, type DateAndTasksContextType, type DateType, type DateContextType, type eDate, type UpdateTaskContextType, type PutTaskContextType, type TaskUpdateType} from './Types'
+import { createContext,  useState,  type ReactNode } from "react";
+import {type AddTaskContextType, type CreateTaskContextType, type DateAndTaskType, type SingleDateAndTaskContext, type TaskCreateType, type TaskType, type DateAndTasksContextType, type DateType, type DateContextType, type eDate, type UpdateTaskContextType, type PutTaskContextType, type TaskUpdateType, type AuthContextType} from './Types'
 import {daysInMonths} from '../utilities/cal'
 import { TODAY, WEEK_DAYS } from "./Constants";
 
+export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export const AddTaskContext = createContext<AddTaskContextType | undefined>(undefined)
 export const UpdateTaskContext = 
 createContext<UpdateTaskContextType | undefined>(undefined)
@@ -13,6 +14,7 @@ export const SingleDataContext  = createContext<SingleDateAndTaskContext | undef
 export const DateContext = createContext<DateContextType | undefined>(undefined)
 
 export const AddTaskProvider : React.FC<{'children' : ReactNode}> = ({children}) => {
+    const [isAuth,setIsAuth] = useState<boolean|null>(null)
     const [date,setDate] = useState<eDate>({
         day : TODAY.getDate(),
         month : TODAY.getMonth(),
@@ -69,11 +71,11 @@ export const AddTaskProvider : React.FC<{'children' : ReactNode}> = ({children})
         const token = localStorage.getItem('jwt_token')
 
         const data : Record<string,number | string | any[]> = {}
-        data['id'] = id
         if(title != "") data['title'] = title
         if(content != "") data['content'] = content
         if(date != "" && time != "") data['pendingOn'] = `${date}T${time}:00Z`
         if(weekDays.length != 0) data['weekDays'] = weekDays
+        if(state != "PENDING") data['state'] = state
         
 
 
@@ -218,6 +220,7 @@ export const AddTaskProvider : React.FC<{'children' : ReactNode}> = ({children})
 
 
     return (
+        <AuthContext.Provider value={{isAuth,setIsAuth}}>
         <AddTaskContext.Provider value={{addTaskVisible,setAddTaskVisible}}>
         <UpdateTaskContext.Provider value={{updateTaskVisible,setUpdateTaskVisible}}>
             <CreateTaskContext.Provider value={{taskData,setTaskData,submitTask}}>
@@ -233,5 +236,6 @@ export const AddTaskProvider : React.FC<{'children' : ReactNode}> = ({children})
             </CreateTaskContext.Provider>
             </UpdateTaskContext.Provider>
         </AddTaskContext.Provider>
+        </AuthContext.Provider>
     )
 }

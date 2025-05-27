@@ -13,7 +13,7 @@ const TodayCardView = ({task,fetchData} : {task : TaskType,fetchData : ()=> void
                     <TaskMenu task={task} fetchData={fetchData} />
                 </div>
                 <div className='flex justify-between'>
-                    <p>Status : <span className='text-yellow-300 font-medium'>{task.state}</span></p>
+                    <p>Status : <span className={`${task.state == 'COMPLEATED' ? 'text-green-500' : 'text-yellow-300'} font-medium`}>{task.state}</span></p>
                    <p>Time : {task.pendingOn.split('T')[1].slice(0,5)}</p>
                 </div>
                 <div className='flex justify-between mt-3 '>

@@ -64,6 +64,15 @@ const authenticateToken = (req,res,next) => {
     })
 }
 
+app.get('/verify_jwt',async (req,res) => {
+    const token = req.header('Authorization')?.split(' ')[1]
+    if(!token) return res.status(400).json({"error" : "Missing jwt token in your request"})
+
+    jwt.verify(token,JWT_SECRET,(err,user) => {
+        if (err) return res.status(403).json({'error' : 'Invalid Token'})
+        return res.status(200).json({'successful' : 'Token verified successful!'})
+    })
+})
 
 app.post('/task',authenticateToken,async (req,res) => {
     const data = req.body;
@@ -165,6 +174,7 @@ app.get('/task/:id',authenticateToken,async (req,res)=>{
 app.put('/task/:id',authenticateToken,async(req,res)=>{
     const task_id = req.params.id
     const data = req.body
+    console.log(data)
 
     try{
         const task = await ps.task.update({
@@ -176,7 +186,8 @@ app.put('/task/:id',authenticateToken,async(req,res)=>{
                 title : data.title,
                 content : data.content,
                 pendingOn : data.pendingOn,
-                weekDays : data.weekDays
+                weekDays : data.weekDays,
+                state : data.state
             }
         })
         return res.status(200).json({

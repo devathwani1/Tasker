@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import  { useState } from 'react'
 
 type LoginDataType = {
   'name' : string,
@@ -31,7 +31,7 @@ const LoginView = () => {
         return;
       }
       localStorage.setItem('jwt_token',data['token'])
-      console.log("Setted token in the local storage!")
+      window.location.href = '/'
     }
     catch(e){
       console.error(String(e))

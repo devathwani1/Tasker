@@ -14,6 +14,12 @@ export type UpdateTaskContextType = {
     setUpdateTaskVisible : Dispatch<React.SetStateAction<boolean>>
 }
 
+//Checks if you are authenticated
+export type AuthContextType = {
+    isAuth : boolean | null,
+    setIsAuth : React.Dispatch<React.SetStateAction<boolean | null>>
+}
+
 //Task Createe Type and creatTask CreateTaskContext Type to create a new task
 export type TaskCreateType = {
     title : string,

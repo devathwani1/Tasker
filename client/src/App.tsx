@@ -10,18 +10,20 @@ import { BrowserRouter as Router,Route,Routes } from 'react-router-dom'
 import AuthView from './Components/AuthView'
 import LoginView from './Components/LoginView'
 import RegisterView from './Components/RegisterView'
+import ProtectedRoute from './providers/ProtectedRoute'
 
 const App = () => {
   return (
 
     <Router>
-    <SizeProvider>
-        <AddTaskProvider>
+    
       <div className='bg-blue-950 h-fit overflow-y-hidden'>
         <TopBar/>
         <Routes>
         <Route path='/' element={
-          <MainView/>
+          <ProtectedRoute>
+              <MainView/>
+          </ProtectedRoute>
         }/>
         <Route path='/login' element={
           <AuthView>
@@ -33,12 +35,8 @@ const App = () => {
               <RegisterView/>
           </AuthView>
         }/>
-      
       </Routes>
       </div>
-      </AddTaskProvider>
-      </SizeProvider>
-      
     </Router>
     
       

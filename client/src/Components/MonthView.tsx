@@ -28,12 +28,16 @@ const MonthView = () => {
     },[])
 
     useEffect(()=>{
-      // dataContext?.fetchAndProcessData()
       if(!(singleContext?.data.full_date == "")) return
       const dataToday = dataContext.dateAndTasks.find(prev => (prev.full_date == TODAY.toLocaleDateString('en-CA'))) 
       if(dataToday) 
       singleContext?.setData(dataToday)
     },[dateContext])
+
+    useEffect(() => {
+      dataContext?.fetchAndProcessData()
+    }, [dateContext?.date.month, dateContext?.date.year])
+
 
     useEffect(() => {
       const handleResize = () => {

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import  { useContext, useEffect } from 'react'
 import MonthView from './MonthView'
 import Today from './TodayView'
 import FloatingBtn from './FloatingBtn'
